@@ -1,32 +1,43 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import { Person } from './types'
+import List from './Components/List'
+import Form from './Components/Form'
+
+
+interface AppState {
+  classmates:Array<Person>
+  numOfClassmates:number
+}
+const initialState = [
+  {
+    name:"Andres",
+    age: 26,
+    gradeYear: 5,
+    avatar :"https://i.pravatar.cc/150?u=andres"
+  }
+]
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [classmates,setClassmates] = useState<AppState["classmates"]>(initialState);
+  const [quantity,setQuantity] = useState<number>(classmates.length);
+  const handleClassmate = (newClassmate:Person):void =>{
+    setClassmates(classmates => [...classmates,newClassmate])
+  }
+  const handleQuantity = ():void=>{
+    setQuantity(quantity=> quantity++)
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div >
+      <h2>{quantity}</h2>
+      <List list={classmates} quantity={quantity}/>
+      <Form addClassmates={handleClassmate} increment={()=>handleQuantity} />
+      <button onClick={()=>setQuantity(quantity=>quantity)}>
+        incremet quantity
+      </button>
     </div>
   )
 }
